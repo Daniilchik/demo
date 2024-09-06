@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - data:/var/lib/postgres
+    environment:
+      - POSTGRES_PASSWORD=1231
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready", "-d", "postgres" ]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+    container_name: db
+  backend:
+    depends_on:
+      db:
+        condition: service_healthy
+    image: daniilchik/demo:latest
+    ports:
+      - 8080:8080
+    environment:
+      - DEV_PASSWORD=1231
+      - DEV_USERNAME=postgres
+      - DEV_DB_URL_DOCKER=jdbc:postgresql://db:5432/postgres
+volumes:
+  data:
+    driver: local
