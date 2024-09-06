@@ -20,7 +20,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    image: daniilchik/demo:latest
+    build:
+      context: .
     ports:
       - 8080:8080
     environment:
