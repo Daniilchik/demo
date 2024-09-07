@@ -4,13 +4,13 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - data:/var/lib/postgres
+      - ./postgres-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=1231
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=demo
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready", "-d", "postgres" ]
+      test: ["CMD", "pg_isready", "-d", "demo", "-U", "postgres"]
       interval: 30s
       timeout: 60s
       retries: 5
@@ -27,7 +27,5 @@ services:
     environment:
       - DEV_PASSWORD=1231
       - DEV_USERNAME=postgres
-      - DEV_DB_URL_DOCKER=jdbc:postgresql://db:5432/postgres
-volumes:
-  data:
-    driver: local
+      - DEV_DB_URL_DOCKER=jdbc:postgresql://db:5432/demo
+
